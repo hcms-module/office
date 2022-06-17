@@ -1,40 +1,48 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>文档操作</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>文档操作</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
-            <el-form label-width="80px" size="small">
-                <el-form-item label="文档替换">
-                    <el-button size="small" @click="wordEvent" type="primary">下载替换文档</el-button>
-                    <div class="form-small">
-                        <small>需要安装 <code>composer require phpoffice/phpword</code></small>
+            <el-form label-width="80px">
+                <el-form-item label="word替换">
+                    <div>
+                        <el-button @click="wordEvent" type="primary">下载替换文档</el-button>
+                        <div class="form-small">
+                            <small>需要安装 <code>composer require phpoffice/phpword</code></small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="导出">
-                    <el-button size="small" @click="exportEvent" type="primary">导出xls</el-button>
-                    <div class="form-small">
-                        <small>需要安装 <code>composer require phpoffice/phpspreadsheet</code></small>
+                    <div>
+                        <el-button @click="exportEvent" type="primary">导出xls</el-button>
+                        <div class="form-small">
+                            <small>需要安装 <code>composer require phpoffice/phpspreadsheet</code></small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="导入">
-                    <el-button size="small" @click="show_select_doc=true" type="primary">选择导入xls</el-button>
-                    <el-link style="margin-left: 10px" :underline="false" type="primary"
-                             href="{:url('office/office/index/xls/demo')}">
-                        下载模板
-                    </el-link>
-                    <div v-if="import_file_path" style="margin-top: 10px;">
-                        <div>文件路径：{{import_file_path}}</div>
-                        <div>
-                            <el-button @click="importEvent" type="primary">确认导入</el-button>
-                        </div>
-                        <div v-if="import_data">
+                    <div>
+                        <el-button @click="show_select_doc=true" type="primary">选择导入xls</el-button>
+                        <el-link style="margin-left: 10px" :underline="false" type="primary"
+                                 href="{:url('office/office/index/xls/demo')}">
+                            下载模板
+                        </el-link>
+                        <div v-if="import_file_path" style="margin-top: 10px;">
+                            <div>文件路径：{{import_file_path}}</div>
                             <div>
-                                <el-button type="text" @click="import_data=''">清除数据</el-button>
+                                <el-button @click="importEvent" type="primary">确认导入</el-button>
                             </div>
-                            <pre style="white-space: pre-wrap;margin-top: 0px;">{{import_data}}</pre>
+                            <div v-if="import_data">
+                                <div>
+                                    <el-button type="text" @click="import_data=''">清除数据</el-button>
+                                </div>
+                                <pre style="white-space: pre-wrap;margin-top: 0px;">{{import_data}}</pre>
+                            </div>
                         </div>
                     </div>
                 </el-form-item>
@@ -42,42 +50,41 @@
         </div>
     </el-card>
 
-    <select-doc :show="show_select_doc" @confirm="selectDocConfirm"
+    <select-doc v-model:show="show_select_doc" @confirm="selectDocConfirm"
                 @close="show_select_doc=false"></select-doc>
 </div>
 <!--引入文档选择组件-->
 {hcmstag:include file="admin@/components/upload/select-doc"}
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 show_select_doc: false,
                 import_file_path: '',
                 import_data: ''
-            },
-            methods: {
-                wordEvent() {
-                    location.href = "{:url('office/office/index/word')}";
-                },
-                selectDocConfirm(files) {
-                    if (files.length > 0) {
-                        this.import_file_path = files[0].file_path
-                    }
-                },
-                importEvent() {
-                    this.httpPost("{:url('office/office/index/import')}", {file_path: this.import_file_path}).then(res => {
-                        if (res.status) {
-                            let {import_data = {}} = res.data
-                            this.import_data = JSON.stringify(import_data)
-                            this.$message.success(res.msg)
-                        }
-                    })
-                },
-                exportEvent() {
-                    location.href = "{:url('office/office/index/export')}";
-                }
             }
-        })
-    })
+        },
+        methods: {
+            wordEvent() {
+                location.href = "{:url('office/office/index/word')}";
+            },
+            selectDocConfirm(files) {
+                if (files.length > 0) {
+                    this.import_file_path = files[0].file_path
+                }
+            },
+            importEvent() {
+                this.httpPost("{:url('office/office/index/import')}", {file_path: this.import_file_path}).then(res => {
+                    if (res.status) {
+                        let {import_data = {}} = res.data
+                        this.import_data = JSON.stringify(import_data)
+                        this.$message.success(res.msg)
+                    }
+                })
+            },
+            exportEvent() {
+                location.href = "{:url('office/office/index/export')}";
+            }
+        }
+    }
 </script>

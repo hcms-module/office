@@ -21,7 +21,7 @@ return [
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
-        'menu_icon' => 'el-icon-document',
+        'menu_icon' => 'line-icon-wenjian3',
         'children' => []
     ]
 ];

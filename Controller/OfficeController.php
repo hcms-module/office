@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Office\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Controller\AdminAbstractController;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Office\Service\ExcelFilter\Common\DateFilter;
 use App\Application\Office\Service\ExcelFilter\Demo\GoodsFilter;
@@ -65,6 +65,7 @@ class OfficeController extends AdminAbstractController
     }
 
     /**
+     * @Api()
      * @RequestMapping(path="index/import")
      */
     function xlsImport()
@@ -75,7 +76,7 @@ class OfficeController extends AdminAbstractController
             $res = $excel_import_service->importRecord();
             $import_data = $excel_import_service->getData();
 
-            return $this->returnSuccessJson(compact('res', 'import_data'));
+            return compact('res', 'import_data');
         } catch (\Throwable $exception) {
             return $this->returnErrorJson($exception->getMessage());
         }
@@ -123,8 +124,5 @@ class OfficeController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    public function index()
-    {
-        return RenderParam::display();
-    }
+    public function index() { }
 }
