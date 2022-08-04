@@ -17,11 +17,26 @@ return [
     [
         'parent_access_id' => 0,
         'access_name' => '文档操作',
-        'uri' => 'office/office/index',
+        'uri' => 'office/office/none',
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
         'menu_icon' => 'line-icon-wenjian3',
-        'children' => []
+        'children' => [
+            [
+                'access_name' => '操作示例',
+                'uri' => 'office/office/index',
+                'params' => '',
+                'sort' => 100,
+                'is_menu' => 1,
+            ],
+            [
+                'access_name' => '导入任务',
+                'uri' => 'office/office/task',
+                'params' => '',
+                'sort' => 100,
+                'is_menu' => 1,
+            ]
+        ]
     ]
 ];

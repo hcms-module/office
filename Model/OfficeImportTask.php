@@ -8,6 +8,7 @@ use Hyperf\DbConnection\Model\Model;
 
 /**
  * @property int            $task_id
+ * @property string         $task_name
  * @property string         $file_path
  * @property string         $data_md5
  * @property int            $import_status
@@ -28,7 +29,7 @@ class OfficeImportTask extends Model
      *
      * @var array
      */
-    protected $fillable = ['file_path', 'data_md5', 'import_status'];
+    protected $fillable = ['task_name', 'file_path', 'data_md5', 'import_status'];
     /**
      * The attributes that should be cast to native types.
      *
@@ -40,7 +41,6 @@ class OfficeImportTask extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
     //执行导入失败
     const IMPORT_STATUS_FAILED = 0;
     //执行成功

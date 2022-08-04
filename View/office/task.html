@@ -1,0 +1,109 @@
+<div class="page-container" v-cloak>
+    <el-card>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>导入任务</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
+        <div>
+            <el-table
+                    :data="data_list"
+                    style="width: 100%">
+                <el-table-column
+                        fixed
+                        prop="task_id"
+                        label="任务id"
+                        min-width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="task_name"
+                        label="任务名称"
+                        min-width="220">
+                </el-table-column>
+                <el-table-column
+                        prop="file_path"
+                        min-width="220"
+                        label="文件">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="import_status"
+                        min-width="100"
+                        label="状态">
+                    <template #default="{row}">
+                        <div>
+                            <el-tag v-if="row.import_status==1" type="success">成功</el-tag>
+                            <el-tag v-if="row.import_status==0" type="danger">失败</el-tag>
+                            <el-tag v-if="row.import_status==2" >部分</el-tag>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        min-width="160"
+                        label="创建时间">
+                </el-table-column>
+                <el-table-column
+                        fixed="right"
+                        align="center"
+                        min-width="180"
+                        label="操作">
+                    <template #default="{row}">
+                        <el-link @click="deleteEvent(row)">
+                            <el-button type="danger">删除</el-button>
+                        </el-link>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        background
+                        layout="prev, pager, next"
+                        :total="total_num"
+                        :current-page="current_page"
+                        :page-size="per_page"
+                        @current-change="currentChangeEvent"
+                >
+                </el-pagination>
+            </div>
+        </div>
+    </el-card>
+</div>
+
+<script>
+    const App = {
+        data() {
+            return {
+                is_init_list: true,
+                where: {},
+            }
+        },
+        methods: {
+            GetList() {
+                this.httpGet('{:url("office/office/task/lists")}', {
+                    page: this.current_page,
+                    ...this.where
+                }).then(res => {
+                    let {lists = {}} = res.data
+                    this.handRes(lists)
+                })
+            },
+            deleteEvent({task_id}) {
+                this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                    this.httpPost("{:url('office/office/task/delete')}", {task_id}).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.GetList()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
+            searchEvent() {
+                this.refreshList()
+            }
+        }
+    }
+</script>

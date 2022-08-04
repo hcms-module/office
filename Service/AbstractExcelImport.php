@@ -39,6 +39,7 @@ abstract class AbstractExcelImport
     protected Spreadsheet $spreadsheet;
     protected Worksheet $sheet;
     protected string $file_path;
+    protected string $task_name = '';
 
 
     /**
@@ -46,10 +47,11 @@ abstract class AbstractExcelImport
      *
      * @param string $file_path
      */
-    public function __construct(string $file_path)
+    public function __construct(string $file_path, $task_name = '')
     {
         $this->spreadsheet = IOFactory::load($file_path);
         $this->file_path = $file_path;
+        $this->task_name = $task_name ?: "task_" . date('Y-m-d H:i');
         $this->sheet = $this->spreadsheet->getActiveSheet();
     }
 
@@ -70,6 +72,7 @@ abstract class AbstractExcelImport
         $file_path = $this->file_path;
 
         return OfficeImportTask::create([
+            'task_name' => $this->task_name,
             'file_path' => $file_path,
             'data_md5' => $data_md5,
             'import_status' => $status
@@ -103,10 +106,10 @@ abstract class AbstractExcelImport
             //如果规定行数大于读取的行数，则返回错误
             throw new ErrorException('gets the number of rows less than the start-row');
         }
-        if ($this->column_count > $currentColumn) {
-            //如果规定列数大于读取的列数，则返回错误
-            throw new ErrorException('need column not enough');
-        }
+//        if ($this->column_count > $currentColumn) {
+//            //如果规定列数大于读取的列数，则返回错误
+//            throw new ErrorException('need column not enough '.$currentColumn);
+//        }
         if ($this->column_count != 0) {
             $currentColumn = $this->column_count;
         }

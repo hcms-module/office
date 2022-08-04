@@ -8,6 +8,7 @@ use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Controller\AdminAbstractController;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use App\Application\Office\Model\OfficeImportTask;
 use App\Application\Office\Service\ExcelFilter\Common\DateFilter;
 use App\Application\Office\Service\ExcelFilter\Demo\GoodsFilter;
 use App\Application\Office\Service\ExcelFilter\ExcelRowFilter;
@@ -17,6 +18,7 @@ use App\Application\Office\Service\OfficeWordService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
 /**
@@ -125,4 +127,42 @@ class OfficeController extends AdminAbstractController
      * @GetMapping(path="index")
      */
     public function index() { }
+
+    /**
+     * @Api()
+     * @PostMapping(path="task/delete")
+     */
+    public function taskDelete()
+    {
+        $task_id = intval($this->request->post('task_id', 0));
+        $task = OfficeImportTask::find($task_id);
+        if (!$task) {
+            return $this->returnErrorJson('抱歉，找不到该记录');
+        }
+
+        return $task->delete() ? [] : $this->returnErrorJson();
+    }
+
+    /**
+     * @Api()
+     * @GetMapping(path="task/lists")
+     */
+    public function taskList()
+    {
+        $where = [];
+        $lists = OfficeImportTask::where($where)
+            ->orderBy('created_at', 'DESC')
+            ->paginate();
+
+        return compact('lists');
+    }
+
+    /**
+     * @View()
+     * @GetMapping(path="task")
+     */
+    public function task()
+    {
+
+    }
 }

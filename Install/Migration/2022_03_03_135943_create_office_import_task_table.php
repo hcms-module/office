@@ -13,6 +13,10 @@ class CreateOfficeImportTaskTable extends Migration
     {
         Schema::create('office_import_task', function (Blueprint $table) {
             $table->bigIncrements('task_id');
+            $table->string('task_name', 256)
+                ->nullable(false)
+                ->default('')
+                ->comment('任务名称');
             $table->string('file_path', 256)
                 ->nullable(false)
                 ->default('')
