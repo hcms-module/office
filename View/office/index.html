@@ -29,7 +29,7 @@
                     <div>
                         <el-button @click="show_select_doc=true" type="primary">选择导入xls</el-button>
                         <el-link style="margin-left: 10px" :underline="false" type="primary"
-                                 href="{:url('office/office/index/xls/demo')}">
+                                 href="{:url('office/office/xls/demo')}">
                             下载模板
                         </el-link>
                         <div v-if="import_file_path" style="margin-top: 10px;">
@@ -66,7 +66,7 @@
         },
         methods: {
             wordEvent() {
-                location.href = "{:url('office/office/index/word')}";
+                location.href = "{:url('office/office/word')}";
             },
             selectDocConfirm(files) {
                 if (files.length > 0) {
@@ -74,7 +74,7 @@
                 }
             },
             importEvent() {
-                this.httpPost("{:url('office/office/index/import')}", {file_path: this.import_file_path}).then(res => {
+                this.httpPost("{:url('office/office/import')}", {file_path: this.import_file_path}).then(res => {
                     if (res.status) {
                         let {import_data = {}} = res.data
                         this.import_data = JSON.stringify(import_data)
@@ -83,7 +83,7 @@
                 })
             },
             exportEvent() {
-                location.href = "{:url('office/office/index/export')}";
+                location.href = "{:url('office/office/export')}";
             }
         }
     }
