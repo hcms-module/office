@@ -6,7 +6,6 @@ namespace App\Application\Office\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
-use App\Application\Admin\Controller\AdminAbstractController;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Office\Model\OfficeImportTask;
 use App\Application\Office\Service\ExcelFilter\Common\DateFilter;
@@ -15,22 +14,19 @@ use App\Application\Office\Service\ExcelFilter\ExcelRowFilter;
 use App\Application\Office\Service\ExcelImport\DemoImportService;
 use App\Application\Office\Service\OfficeExcelService;
 use App\Application\Office\Service\OfficeWordService;
+use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="/office/office")
- */
-class OfficeController extends AdminAbstractController
+#[Middleware(AdminMiddleware::class)]
+#[Controller(prefix: "/office/office")]
+class OfficeController extends AbstractController
 {
 
-    /**
-     * @RequestMapping(path="index/word")
-     */
+    #[RequestMapping(path: "word")]
     function wordReplace()
     {
         $data = [
@@ -56,9 +52,7 @@ class OfficeController extends AdminAbstractController
         return $this->response->download($file_path);
     }
 
-    /**
-     * @RequestMapping(path="index/xls/demo")
-     */
+    #[RequestMapping(path: "xls/demo")]
     function xlsDemo()
     {
         $file_path = BASE_PATH . '/app/Application/Office/Service/data/demo.xlsx';
@@ -66,10 +60,8 @@ class OfficeController extends AdminAbstractController
         return $this->response->download($file_path);
     }
 
-    /**
-     * @Api()
-     * @RequestMapping(path="index/import")
-     */
+    #[Api]
+    #[RequestMapping(path: "import")]
     function xlsImport()
     {
         $file_path = $this->request->input('file_path', '');
@@ -84,9 +76,7 @@ class OfficeController extends AdminAbstractController
         }
     }
 
-    /**
-     * @RequestMapping(path="index/export")
-     */
+    #[RequestMapping(path: "export")]
     function xlsExport()
     {
         $fileName = '';
@@ -122,16 +112,14 @@ class OfficeController extends AdminAbstractController
         }
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    public function index() { }
+    #[View]
+    #[GetMapping("")]
+    public function index()
+    {
+    }
 
-    /**
-     * @Api()
-     * @PostMapping(path="task/delete")
-     */
+    #[Api]
+    #[PostMapping(path: "task/delete")]
     public function taskDelete()
     {
         $task_id = intval($this->request->post('task_id', 0));
@@ -143,10 +131,8 @@ class OfficeController extends AdminAbstractController
         return $task->delete() ? [] : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="task/lists")
-     */
+    #[Api]
+    #[GetMapping(path: "task/lists")]
     public function taskList()
     {
         $where = [];
@@ -157,10 +143,8 @@ class OfficeController extends AdminAbstractController
         return compact('lists');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="task")
-     */
+    #[View]
+    #[GetMapping(path: "task")]
     public function task()
     {
 

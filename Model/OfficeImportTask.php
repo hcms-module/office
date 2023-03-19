@@ -17,25 +17,25 @@ use Hyperf\DbConnection\Model\Model;
  */
 class OfficeImportTask extends Model
 {
-    protected $primaryKey = 'task_id';
+    protected string $primaryKey = 'task_id';
     /**
      * The table associated with the model.
      *
-     * @var string
+     * @var ?string
      */
-    protected $table = 'office_import_task';
+    protected ?string $table = 'office_import_task';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['task_name', 'file_path', 'data_md5', 'import_status'];
+    protected array $fillable = ['task_name', 'file_path', 'data_md5', 'import_status'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
+    protected array $casts = [
         'task_id' => 'integer',
         'import_status' => 'integer',
         'created_at' => 'datetime',

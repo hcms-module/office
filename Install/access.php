@@ -17,7 +17,7 @@ return [
     [
         'parent_access_id' => 0,
         'access_name' => '文档操作',
-        'uri' => 'office/office/none',
+        'uri' => 'office/office',
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
@@ -25,7 +25,7 @@ return [
         'children' => [
             [
                 'access_name' => '操作示例',
-                'uri' => 'office/office/index',
+                'uri' => 'office/office',
                 'params' => '',
                 'sort' => 100,
                 'is_menu' => 1,
