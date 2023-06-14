@@ -26,6 +26,7 @@ abstract class AbstractExcelImport
      * @var int
      */
     protected int $start_row = 0;
+    protected int $max_row = 10000;
 
     /**
      * 文件导入行数
@@ -100,11 +101,14 @@ abstract class AbstractExcelImport
     private function importData(): array
     {
         $cells = $this->sheet->getCellCollection();
-        $currentRow = $cells->getCurrentRow();
+        $highestRow = $cells->getHighestRow();
         $currentColumn = $this->col2Int($cells->getCurrentColumn()) + 1;
-        if ($currentRow < $this->start_row) {
+        if ($highestRow < $this->start_row) {
             //如果规定行数大于读取的行数，则返回错误
-            throw new ErrorException('gets the number of rows less than the start-row');
+            throw new ErrorException('导入文件的行数少于最低内容行数');
+        }
+        if ($highestRow > $this->max_row) {
+            throw new ErrorException('导入的文件不能超过最大行数 ' . $this->max_row . '，请检查是否有多余的空行');
         }
 //        if ($this->column_count > $currentColumn) {
 //            //如果规定列数大于读取的列数，则返回错误
@@ -114,7 +118,7 @@ abstract class AbstractExcelImport
             $currentColumn = $this->column_count;
         }
         $data = [];
-        for ($i = $this->start_row; $i <= $currentRow; $i++) {
+        for ($i = $this->start_row; $i <= $highestRow; $i++) {
             //执行单个导入
             $itemData = $this->importDataItem($i, $currentColumn);
             $data[] = $itemData;
